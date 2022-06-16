@@ -1,7 +1,7 @@
 # Facebook_scraper
-This repository is a dockerised image of a facebook public page scraper application, based on Linux Ubuntu.
+This repository is a dockerised scraper application for facebook public pages.
 ## How to run
-First, you need to install and configure Docker on your system following this [installation guide]([actual URL to navigate](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-fr)).
+First, you need to install and configure Docker on your system following this ([installation guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-fr)).
 Then, excute this commands
 ```
 $ git clone https://github.com/maramraddaoui/Facebook_scraper
