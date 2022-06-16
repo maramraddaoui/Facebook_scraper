@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqlcontainer
+    command: --default-authentification-plugin=mysql_native_password
+    restart: unless-stopped
+    volumes:
+      - ./dbinit/init.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - $HOME/database:/var/lib/mysql
+    ports:
+      - 32439:32439
+    expose:
+      - 32439
+    environment:
+      MYSQL_DATABASE: facebook_scraper
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456789
+      MYSQL_ROOT_PASSWORD: 123456789
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysqldb
+    networks:
+      - internalnet
+  
+
+  selenium:
+    image: selenium/standalone-firefox
+    container_name: seleniumcontainer
+    volumes:
+      - $HOME/hub:/var/lib/hub
+    ports:
+      - 4444:4444
+    expose:
+      - 4444
+    networks:
+      - internalnet
+
+  scraperapp:
+    container_name: scrapercontainer
+    build: .
+    image: scraperapp:v1
+    volumes:
+      - $HOME/scraperapp:/code
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    environment:
+      DB_HOST: mysqldb
+      DB_PORT: 32439
+      DB_USER: "root"
+      DB_PASSWORD: "123456789" 
+      DB_NAME: facebook_scraper
+      SERVICE_TAGS: prod
+      SERVICE_NAME: scraperservice
+      SERVICE_PORT: 8000
+    depends_on:
+      - mysqldb
+      - selenium
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge
